@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keys" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/login.css">
+    <title>账号密码登陆</title>
+    <style>
+
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" href="../index.html" style="font-size:32px;">textDemo</a></div>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+    <form class="form-signin" role="form">
+        <h2 class="form-signin-heading"><i class="glyphicon glyphicon-log-in"></i> 用户登录</h2>
+        <div class="form-group has-success has-feedback">
+            <input type="text" class="form-control" id="username" placeholder="请输入登录账号" autofocus>
+            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+        </div>
+        <div class="form-group has-success has-feedback">
+            <input type="text" class="form-control" id="userpswd" placeholder="请输入登录密码" style="margin-top:10px;">
+            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        </div>
+        <div class="checkbox">
+            <label>
+                <a href="">忘记密码</a>
+            </label>
+            <label style="float:right">
+                <a href="/toReg">我要注册</a>
+            </label>
+        </div>
+        <a class="btn btn-lg btn-success btn-block" onclick="doLogin()" > 登录</a>
+    </form>
+</div>
+<script src="/jquery/jquery-2.1.1.min.js"></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/layui/layui.js" charset="utf-8"></script>
+<script>
+    function doLogin(){
+        var username = $("#username").val();
+        var userpswd = $("#userpswd").val();
+        $.post("/login",{"username":username,"userpswd":userpswd},function (ResultEntity) {
+            if (ResultEntity.result == "SUCCESS"){
+                window.location.href = "index";
+            }else {
+                alert(ResultEntity.message);
+            }
+        })
+    }
+
+
+    /*function qq_login() {
+        {
+            //以下为按钮点击事件的逻辑。注意这里要重新打开窗口
+            //否则后面跳转到QQ登录，授权页面时会直接缩小当前浏览器的窗口，而不是打开新窗口
+            /!*var A=window.open("oauth/index.php","TencentLogin",
+                "width=450,height=320,menubar=0,scrollbars=1,resizable=1,status=1,titlebar=0,toolbar=0,location=1");*!/
+            var a = encodeURI("http://192.168.1.102/qq_login");
+            window.location.href="https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=[YOUR_APPID]&redirect_uri="+a+"&scope=get_user_info"
+        }
+    }*/
+</script>
+</body>
+</html>

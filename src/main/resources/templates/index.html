@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/buttons.css">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/css/justified-nav.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]>--><!--<script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="/bootstrap/js/ie-emulation-modes-warning.js"></script>
+    <title>textDemo</title>
+    <style>
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav th:if="${memberId}==null" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <div><a class="navbar-brand" href="/index" style="font-size:32px;">textDemo</a></div>
+                </div>
+                <div id="navbar1" class="navbar-collapse collapse" style="float:right;">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/toLogin">登录</a></li>
+                        <li><a href="/toReg">注册</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <nav th:unless="${memberId}==null" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <div><a class="navbar-brand" style="font-size:32px;" href="/index">textDemo</a></div>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li style="padding-top:8px;">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default btn-success dropdown-toggle" data-toggle="dropdown">
+                                    <i class="glyphicon glyphicon-user" th:utext="${nickname}"></i><span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="/toUser"><i class="glyphicon glyphicon-cog"></i> 个人中心</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="/delLogin"><i class="glyphicon glyphicon-off"></i> 注销登陆</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li style="margin-left:10px;padding-top:8px;">
+                            <button type="button" class="btn btn-default btn-danger">
+                                <span class="glyphicon glyphicon-question-sign"></span> 帮助
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</body>
+</html>
