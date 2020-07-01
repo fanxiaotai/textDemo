@@ -42,4 +42,64 @@ public class RoleUtils {
         }
         return isUserRole;
     }
+
+    public static boolean roleLeave(Role roleByRoleId) {
+        boolean isRoleLeave = false;
+        Integer leaveExp = roleByRoleId.getLeaveExp();
+        Integer exp = roleByRoleId.getExp();
+        Integer roleLeave = roleByRoleId.getRoleLeave();
+        if (exp>=leaveExp){
+            exp -= leaveExp;
+            roleLeave++;
+            leaveExp = roleLeave*roleLeave*10;
+            //设置升级后剩余点经验
+            roleByRoleId.setExp(exp);
+            //设置角色等级
+            roleByRoleId.setRoleLeave(roleLeave);
+            //设置下次升级点所需经验
+            roleByRoleId.setLeaveExp(leaveExp);
+            //升级后增加属性点,升级+2
+            roleByRoleId.setFreelyDistributable(roleByRoleId.getFreelyDistributable()+2);
+            //升级后增加技能点，升级+1
+            roleByRoleId.setSkillPoints(roleByRoleId.getSkillPoints()+1);
+            isRoleLeave=true;
+        }
+        return isRoleLeave;
+    }
+
+    public static boolean lifeMaxAdd(Role role) {
+        boolean isRoleLeave = false;
+        Integer freelyDistributable = role.getFreelyDistributable();
+        if (freelyDistributable>=1){
+            freelyDistributable--;
+            role.setFreelyDistributable(freelyDistributable);
+            role.setLifeMax(role.getLifeMax()+10);
+            isRoleLeave = true;
+        }
+        return isRoleLeave;
+    }
+
+    public static boolean magicMaxAdd(Role role) {
+        boolean isRoleLeave = false;
+        Integer freelyDistributable = role.getFreelyDistributable();
+        if (freelyDistributable>=1){
+            freelyDistributable--;
+            role.setFreelyDistributable(freelyDistributable);
+            role.setMagicMax(role.getMagicMax()+10);
+            isRoleLeave = true;
+        }
+        return isRoleLeave;
+    }
+
+    public static boolean attackAdd(Role role) {
+        boolean isRoleLeave = false;
+        Integer freelyDistributable = role.getFreelyDistributable();
+        if (freelyDistributable>=1){
+            freelyDistributable--;
+            role.setFreelyDistributable(freelyDistributable);
+            role.setAttack(role.getAttack()+1);
+            isRoleLeave = true;
+        }
+        return isRoleLeave;
+    }
 }

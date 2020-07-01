@@ -1,5 +1,6 @@
 package com.fanyitai.text.demo.controller.login;
 
+import com.alibaba.fastjson.JSON;
 import com.fanyitai.text.demo.annotation.Login;
 import com.fanyitai.text.demo.bean.Role;
 import com.fanyitai.text.demo.bean.User;
@@ -35,7 +36,7 @@ public class UserController {
             return "user";
         }
         //根据用户信息获取用户的所有角色
-        List<Role> roleList = roleService.getRoleByUserId(user.getId());
+        List<Role> roleList = roleService.getRoleByUserId(user.getId()+"");
         modelMap.put("roleList",roleList);
 
         //将角色信息返回给前台页面
@@ -53,7 +54,7 @@ public class UserController {
         if (user==null){
             return ResultEntity.failed("请先登陆");
         }
-        Role role = roleService.getRoleByRoleIdAndUserId(user.getId(),roleId);
+        Role role = roleService.getRoleByRoleIdAndUserId(user.getId()+"",roleId);
         if (role==null){
             return ResultEntity.failed("你未拥有该角色");
         }
@@ -73,7 +74,7 @@ public class UserController {
             return ResultEntity.failed("请先登陆");
         }
         //根据用户信息获取用户的所有角色
-        List<Role> roleList = roleService.getRoleByUserId(user.getId());
+        List<Role> roleList = roleService.getRoleByUserId(user.getId()+"");
 
         //将角色信息返回
         return ResultEntity.successWithData(roleList);
@@ -91,7 +92,7 @@ public class UserController {
         if (user==null){
             return ResultEntity.failed("请先登陆");
         }
-        if (roleService.getRoleByRoleIdAndUserId(user.getId(),roleId)==null){
+        if (roleService.getRoleByRoleIdAndUserId(user.getId()+"",roleId)==null){
             return ResultEntity.failed("你未拥有该角色");
         }
         roleService.deleteRoleByRoleId(roleId);
@@ -111,7 +112,7 @@ public class UserController {
             return ResultEntity.failed("请先登陆");
         }
         //根据用户信息获取用户的所有角色
-        List<Role> roleByRoleId = roleService.getRoleByUserId(user.getId());
+        List<Role> roleByRoleId = roleService.getRoleByUserId(user.getId()+"");
 
         boolean isUserRole = false;
         Role defaultRole = null;
@@ -168,4 +169,97 @@ public class UserController {
         return ResultEntity.successWithData("创建成功");
     }
 
+    /**
+     * 角色升级
+     */
+    @RequestMapping("/roleLeave")
+    @ResponseBody
+    @Login
+    public ResultEntity<String> roleLeave(HttpSession session,String roleId){
+        ResultEntity<String> stringResultEntity = checkRoleByUserId(session, roleId);
+        if (!stringResultEntity.getResult().equals(ResultEntity.SUCCESS)){
+            return stringResultEntity;
+        }
+        Role role = JSON.parseObject(stringResultEntity.getData(),Role.class);
+        boolean isRoleLeave = RoleUtils.roleLeave(role);
+        if (!isRoleLeave){
+            return ResultEntity.failed("经验不足");
+        }
+        roleService.updateRole(role);
+        return ResultEntity.successWithData(role);
+    }
+
+    /**
+     * 生命加点
+     */
+    @RequestMapping("/lifeMaxAdd")
+    @ResponseBody
+    @Login
+    public ResultEntity<String> lifeMaxAdd(HttpSession session,String roleId){
+        ResultEntity<String> stringResultEntity = checkRoleByUserId(session, roleId);
+        if (!stringResultEntity.getResult().equals(ResultEntity.SUCCESS)){
+            return stringResultEntity;
+        }
+        Role role = JSON.parseObject(stringResultEntity.getData(),Role.class);
+        if (!RoleUtils.lifeMaxAdd(role)){
+            return ResultEntity.failed("自由属性点不足");
+        }
+        roleService.updateRole(role);
+        return ResultEntity.successWithData(role);
+    }
+
+    /**
+     * 魔法加点
+     */
+    @RequestMapping("/magicMaxAdd")
+    @ResponseBody
+    @Login
+    public ResultEntity<String> magicMaxAdd(HttpSession session,String roleId){
+        ResultEntity<String> stringResultEntity = checkRoleByUserId(session, roleId);
+        if (!stringResultEntity.getResult().equals(ResultEntity.SUCCESS)){
+            return stringResultEntity;
+        }
+        Role role = JSON.parseObject(stringResultEntity.getData(),Role.class);
+        if (!RoleUtils.magicMaxAdd(role)){
+            return ResultEntity.failed("自由属性点不足");
+        }
+        roleService.updateRole(role);
+        return ResultEntity.successWithData(role);
+    }
+
+    /**
+     * 攻击加点
+     */
+    @RequestMapping("/attackAdd")
+    @ResponseBody
+    @Login
+    public ResultEntity<String> attackAdd(HttpSession session,String roleId){
+        ResultEntity<String> stringResultEntity = checkRoleByUserId(session, roleId);
+        if (!stringResultEntity.getResult().equals(ResultEntity.SUCCESS)){
+            return stringResultEntity;
+        }
+        Role role = JSON.parseObject(stringResultEntity.getData(),Role.class);
+        if (!RoleUtils.attackAdd(role)){
+            return ResultEntity.failed("自由属性点不足");
+        }
+        roleService.updateRole(role);
+        return ResultEntity.successWithData(role);
+    }
+
+    public ResultEntity<String> checkRoleByUserId(HttpSession session,String roleId){
+        //获取用户信息
+        User user = (User)session.getAttribute("userInfo");
+        if (user==null){
+            return ResultEntity.failed("请先登陆");
+        }
+        //根据id查询该角色
+        Role roleByRoleId = roleService.getRoleByRoleId(roleId);
+        if (roleByRoleId==null){
+            return ResultEntity.failed("该角色不存在");
+        }
+        if (!roleByRoleId.getUserId().equals(user.getId())){
+            return ResultEntity.failed("你未拥有该角色");
+        }
+        return ResultEntity.successWithData(roleByRoleId);
+    }
 }

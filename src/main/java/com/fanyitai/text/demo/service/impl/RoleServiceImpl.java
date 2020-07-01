@@ -17,7 +17,7 @@ public class RoleServiceImpl implements RoleService {
     RoleMapper roleMapper;
 
     @Override
-    public List<Role> getRoleByUserId(Integer userId) {
+    public List<Role> getRoleByUserId(String userId) {
         Example example = new Example(Role.class);
         example.createCriteria().andEqualTo("userId",userId);
         return roleMapper.selectByExample(example);
@@ -42,7 +42,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role checkRoleByUserId(Integer id, String roleId) {
+    public Role checkRoleByUserId(String id, String roleId) {
         Example example = new Example(Role.class);
         example.createCriteria().andEqualTo("roleId",roleId).andEqualTo("userId",id);
         return roleMapper.selectOneByExample(example);
@@ -59,7 +59,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role getRoleByRoleIdAndUserId(Integer id, String roleId) {
+    public Role getRoleByRoleIdAndUserId(String id, String roleId) {
         Role roleByRoleId = getRoleByRoleId(roleId);
         if (roleByRoleId!=null){
             if (id.equals(roleByRoleId.getId())){
