@@ -15,6 +15,7 @@ public class User {
     private Integer id;
     private String userName;
     private String userPassword;
+    private String email;
     //注册时间
     private String registerTime;
     //上次登陆时间
